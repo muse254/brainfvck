@@ -44,6 +44,7 @@ impl ProgramState {
     }
 
     /// Interpretes the Brainfuck program serially, save for the looping operation that has to re-evaluate previous streamed data.
+    /// The stack condition for looping is achieved through recursion at '['
     fn execute(&mut self, loop_start_idx: usize, loop_counter_idx: usize) {
         self.stream.next_read_idx = loop_start_idx;
         self.cell_idx = loop_counter_idx;
@@ -114,7 +115,7 @@ fn main() {
             Ok(mut program) => {
                 program.execute(0, 0);
                 println!(
-                    "Program {:?} output: \n {:?}",
+                    "Program: {:?} output: {:?}",
                     i,
                     program
                         .output
