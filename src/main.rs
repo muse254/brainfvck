@@ -48,14 +48,14 @@ impl ProgramState {
         self.stream.next_read_idx = loop_start_idx;
         self.cell_idx = loop_counter_idx;
         loop {
-            if let Some(cmd) = self.stream.read_next_idx() {
-                match cmd {
+            match self.stream.read_next_idx() {
+                Some(cmd) => match cmd {
                     '>' => {
                         self.data_ptrs.push(0);
                         self.cell_idx += 1;
                     }
                     '<' => self.cell_idx -= 1,
-                    '+' => self.data_ptrs[self.cell_idx] = self.data_ptrs[self.cell_idx] + 1,
+                    '+' => self.data_ptrs[self.cell_idx] += 1,
                     '-' => self.data_ptrs[self.cell_idx] -= 1,
                     '.' => self.output.push(self.data_ptrs[self.cell_idx]),
                     '[' => self.execute(self.stream.next_read_idx, self.cell_idx),
@@ -65,12 +65,10 @@ impl ProgramState {
                         }
                         self.stream.next_read_idx = loop_start_idx;
                         self.cell_idx = loop_counter_idx;
-                        continue;
                     }
-                    _ => continue,
-                }
-            } else {
-                return;
+                    _ => {}
+                },
+                None => return,
             }
         }
     }
