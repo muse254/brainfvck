@@ -10,3 +10,22 @@ While not listed in requirements, testing is advised.
 - Nested loops must be supported.
 - Make it read input from a read stream implementation for your preferred language without knowing all input at once. This requirement excludes look-ahead. For example to find closing brackets for loops. As such, the next token should be read and processed only after the current one is finished being processed.
 Loops preparation might be using the same process to fill them. This means whilst creating a loop – it can read necessary tokens from the input, while still adhering to this rule.
+
+## How to run
+
+Assuming you have Rust installed in your system.
+
+Testing:
+```sh
+cargo test
+```
+
+Run hello-worl example:
+```sh
+cargo run "./bf_samples/hello_world.bf"
+```
+
+Run `2 + 5` example:
+```sh
+cargo run "./bf_samples/add_2_5.bf"
+```
