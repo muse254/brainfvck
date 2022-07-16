@@ -10,7 +10,7 @@ impl FakeStreamer {
     /// Reads the next index provided in the structure and updates the counter.
     fn read_next_idx(&mut self) -> Option<char> {
         let read_idx = self.next_read_idx.clone();
-        if self.data.len() > read_idx + 1 {
+        if self.data.len() > read_idx {
             self.next_read_idx = read_idx + 1;
             return Some(self.data[read_idx]);
         }
@@ -56,8 +56,21 @@ impl ProgramState {
                         self.cell_idx += 1;
                     }
                     '<' => self.cell_idx -= 1,
-                    '+' => self.data_ptrs[self.cell_idx] += 1,
-                    '-' => self.data_ptrs[self.cell_idx] -= 1,
+                    '+' => {
+                        if self.data_ptrs[self.cell_idx] == u8::MAX {
+                            self.data_ptrs[self.cell_idx] = u8::MIN;
+                        } else {
+                            self.data_ptrs[self.cell_idx] += 1;
+                        }
+                    }
+                    '-' => {
+                        if self.data_ptrs[self.cell_idx] == u8::MIN {
+                            self.data_ptrs[self.cell_idx] = u8::MAX;
+                        } else {
+                            self.data_ptrs[self.cell_idx] -= 1;
+                        }
+                    }
+
                     '.' => self.output.push(self.data_ptrs[self.cell_idx]),
                     '[' => self.execute(self.stream.next_read_idx, self.cell_idx),
                     ']' => {
